@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WaveChat | Clean Discovery Experience</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Clean Background Surface -->
+    <div class="app-bg"></div>
+
+    <!-- Join Screen Overlay -->
+    <div id="join-overlay" class="overlay">
+        <div class="glass-card login-card animate-pop">
+            <h1>Wave<span>Chat</span></h1>
+            <p>Connect with your world in a clean, modern space.</p>
+            <form id="join-form">
+                <div class="input-light-wrapper">
+                    <input type="text" id="usernameInput" placeholder="Enter your name..." required autocomplete="off">
+                </div>
+                <button type="submit" class="btn-primary">Start Chatting</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="app-layout wrapper-hidden" id="app-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar light-glass">
+            <div class="sidebar-header-discover">
+                <div class="search-box">
+                    <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z" /></svg>
+                    <input type="text" id="sidebar-search" placeholder="Search to join..." autocomplete="off">
+                </div>
+                <div class="discovery-actions">
+                    <button id="add-menu-btn" class="icon-btn-light">
+                        <svg viewBox="0 0 24 24" width="20" height="20">
+                            <path fill="currentColor" d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
+                        </svg>
+                    </button>
+                    <!-- Sidebar Dropdown -->
+                    <div id="sidebar-dropdown" class="dropdown-menu hidden">
+                        <button id="opt-new-channel">New Channel</button>
+                        <button id="opt-new-person">New Person</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sidebar-content custom-scrollbar">
+                <!-- Active Chats Section -->
+                <div class="sidebar-section">
+                    <div class="section-header">
+                        <h4>ACTIVE CHANNELS</h4>
+                    </div>
+                    <div id="room-list" class="sidebar-list">
+                        <!-- Joined rooms injected here -->
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <div class="section-header">
+                        <h4>DIRECT MESSAGES</h4>
+                    </div>
+                    <div id="user-list" class="sidebar-list">
+                        <!-- Joined users injected here -->
+                    </div>
+                </div>
+                
+                <!-- Search Results Overlay (Hidden by Default) -->
+                <div id="search-results-box" class="search-results hidden">
+                    <div class="section-header">
+                        <h4>DISCOVERY RESULTS</h4>
+                    </div>
+                    <div id="search-results-list" class="sidebar-list">
+                        <!-- Search matches appear here to be added -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-footer">
+                <!-- Archived Section -->
+                <div id="archived-section" class="sidebar-section archived-container">
+                    <div id="archived-trigger" class="section-header cursor-pointer">
+                        <h4>ARCHIVED CHATS (<span id="archived-count">0</span>)</h4>
+                        <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" /></svg>
+                    </div>
+                    <div id="archived-list" class="sidebar-list hidden">
+                        <!-- Archived items go here -->
+                    </div>
+                </div>
+
+                <div class="my-profile">
+                    <div class="avatar tiny" id="my-avatar">?</div>
+                    <span id="my-name">Me</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Chat Area -->
+        <main class="chat-main">
+            <div class="chat-wrapper light-glass">
+                <!-- Empty State Placeholder -->
+                <div id="empty-chat-state" class="empty-placeholder">
+                    <div class="empty-icon">
+                        <svg viewBox="0 0 24 24" width="60" height="60"><path fill="currentColor" d="M12,2C6.48,2 2,6.48 2,12C2,17.52 6.48,22 12,22C17.52,22 22,17.52 22,12C22,6.48 17.52,2 12,2M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M13,7H11V11H7V13H11V17H13V13H17V11H13V7Z"/></svg>
+                    </div>
+                    <h3>Start a Conversation</h3>
+                    <p>Search for a channel or person in the sidebar to begin.</p>
+                </div>
+
+                <div id="active-chat-container" class="active-chat-ui hidden">
+                    <header class="chat-header">
+                        <div class="user-info">
+                            <div class="avatar" id="active-chat-avatar">#</div>
+                            <div class="header-meta">
+                                <h2 id="active-chat-name">Select a chat</h2>
+                                <span id="active-chat-status" class="online-tag">Chat management</span>
+                            </div>
+                        </div>
+                        <div class="header-actions">
+                            <button id="chat-options-btn" class="icon-btn-ghost">
+                                <svg viewBox="0 0 24 24" width="20" height="20">
+                                    <path fill="currentColor" d="M12,16A2,2 0 0,1 14,18A2,2 0 0,1 12,20A2,2 0 0,1 10,18A2,2 0 0,1 12,16M12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12A2,2 0 0,1 12,10M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8A2,2 0 0,1 10,6A2,2 0 0,1 12,4Z" />
+                                </svg>
+                            </button>
+                            <!-- Chat Dropdown -->
+                            <div id="chat-dropdown" class="dropdown-menu hidden">
+                                <button id="opt-view-info">
+                                    <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M11,9H13V7H11M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,17H13V11H11V17Z" /></svg>
+                                    View Info
+                                </button>
+                                <button id="opt-mute-chat">
+                                    <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M12,4L9.91,6.09L12,8.18M4.27,3L3,4.27L7.73,9H3V15H7L12,20V13.27L16.25,17.53C15.58,18.04 14.83,18.46 14,18.7V20.77C15.38,20.45 16.63,19.82 17.68,18.96L19.73,21L21,19.73L12,10.73M19,12C19,12.94 18.8,13.82 18.46,14.64L19.97,16.15C20.62,14.91 21,13.5 21,12C21,8.12 18.14,4.93 14.5,4.29V6.37C17.08,6.97 19,9.27 19,12M14,12L12,10V6.58L14,8.58V12Z" /></svg>
+                                    Mute Notification
+                                </button>
+                                <button id="opt-archive-chat" class="danger">
+                                    <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M20,21H4V7H20M20,3H4V5H20M10,12H14V10H10" /></svg>
+                                    Archive Chat
+                                </button>
+                            </div>
+                        </div>
+                    </header>
+                    
+                    <div id="messages" class="message-area custom-scrollbar">
+                        <!-- Messages will appear here -->
+                    </div>
+
+                    <div id="typing-indicator" class="typing-indicator-box hidden">
+                        <div class="typing-dots">
+                            <span></span><span></span><span></span>
+                        </div>
+                        <span id="typing-text">Someone is typing...</span>
+                    </div>
+
+                    <form id="chat-form" class="chat-input-row">
+                        <div class="input-wrapper-light">
+                            <input type="text" id="msgInput" placeholder="Type a message..." autocomplete="off">
+                        </div>
+                        <button type="submit" id="sendBtn">
+                            <svg viewBox="0 0 24 24" width="22" height="22">
+                                <path fill="currentColor" d="M2,21L23,12L2,3V10L17,12L2,14V21Z" />
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Info Modal -->
+    <div id="info-modal" class="overlay hidden">
+        <div class="glass-card info-card animate-pop">
+            <div id="info-content">
+                <!-- Dynamic Content -->
+            </div>
+            <button type="button" id="close-info" class="btn-primary" style="margin-top:20px">Close</button>
+        </div>
+    </div>
+
+    <!-- Create Room Modal -->
+    <div id="room-modal" class="overlay hidden">
+        <div class="glass-card modal-card animate-pop">
+            <h3>Create Channel</h3>
+            <p>Gather your team in a new space.</p>
+            <form id="create-room-form">
+                <input type="text" id="newRoomName" placeholder="e.g. design-feedback" required autocomplete="off">
+                <div class="modal-actions">
+                    <button type="button" id="close-modal" class="btn-ghost" style="flex:1">Cancel</button>
+                    <button type="submit" class="btn-primary" style="flex:1">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
